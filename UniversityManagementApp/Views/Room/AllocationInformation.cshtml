@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "AllocationInformation";
+}
+
+<h2>AllocationInformation</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken();
+    <div class="">
+        <div class="form-horizontal">
+            <div class="form-group" id="form-group-center">
+                @Html.Label("department", "Department", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("department", new SelectList(ViewBag.Departments, "Id", "Name"), "Select Department", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="empty-div"></div>
+<table class="table table-bordered table-hover">
+    <thead>
+    <th class="text-center col-md-3">Course Code</th>
+    <th class="text-center col-md-2">Name</th>
+    <th class="text-center col-md-7">Schedule Info</th>
+    </thead>
+</table>
+
+
+
+
+@section styles{
+    <style>
+        .empty-div {
+            height: 20px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script>
+        $('#department').change(function () {
+            var data = {},
+                departmentValue = $(this).val();
+
+            if (departmentValue > 0 || departmentValue !== null) {
+                console.log(departmentValue);
+            }
+        });
+    </script>
+}

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<UniversityManagementApp.Models.Department>
+
+@{
+    ViewBag.Title = "DepartmentsList";
+}
+
+
+
+<div class="form-container">
+    
+    
+
+    <table class="table table-hover table-bordered text-center">
+        <tr>
+            <td colspan="2"><h2>Departments List</h2></td>
+        </tr>
+        <tr>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

@@ -1,0 +1,230 @@
+﻿@model UniversityManagementApp.ViewModels.CourseAssignmentViewModel
+@using UniversityManagementApp.Models
+
+@{
+    ViewBag.Title = "Assign";
+}
+
+<h2>Assign</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>CourseAssignment</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="departments">Departments</label>
+            <div class="col-md-10">
+                <select class="form-control" id="departments">
+                    <option value="">Select Department</option>
+                    @foreach (Department department in Model.Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        @{
+            SelectListItem listItemForTeacher = new SelectListItem
+            {
+                Text = "Select Department",
+                Value = ""
+            };
+
+            IEnumerable<SelectListItem> listForTeacher = new List<SelectListItem> { listItemForTeacher };
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CourseAssignment.TeacherId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.CourseAssignment.TeacherId, listForTeacher, htmlAttributes: new { @class = "form-control", disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.CourseAssignment.TeacherId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="teacherCreditToTake">Credit To Take</label>
+            <div class="col-md-10">
+                <input class="form-control" id="teacherCreditToTake" placeholder="Credit to be Taken" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="teacherRemainingCredit">Remaining Credit</label>
+            <div class="col-md-10">
+                <input class="form-control" id="teacherRemainingCredit" placeholder="Remaining Credit" readonly="readonly">
+            </div>
+        </div>
+
+        @{
+            SelectListItem listItemForCourseId = new SelectListItem
+            {
+                Text = "Select Department",
+                Value = ""
+            };
+
+            IEnumerable<SelectListItem> listForCourse = new List<SelectListItem> { listItemForCourseId };
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CourseAssignment.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.CourseAssignment.CourseId, listForCourse, htmlAttributes: new { @class = "form-control", disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.CourseAssignment.CourseId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="courseName">Name</label>
+            <div class="col-md-10">
+                <input class="form-control" id="courseName" placeholder="Credit to be Taken" readonly="readonly">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="courseCredit">Credit</label>
+            <div class="col-md-10">
+                <input class="form-control" id="courseCredit" placeholder="Remaining Credit" readonly="readonly">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "GetCourseById")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(function () {
+
+            var remainingCredit = 0, courseCredit = 0;
+
+            $("#departments").change(function () {
+
+                var departmentsValue = {};
+                departmentsValue.departmentId = this.value;
+
+                if (this.value > 0 && this.value !== "") {
+
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetTeachersAndCoursesByDepartment", "Course")',
+                        data: departmentsValue
+                    }).done(function (data) {
+                        var teachers = data['teachers'];
+
+                        var teachersOptions = "<option>Choose Teacher</option>" + getSelectOptions(teachers, "Id", "Name");
+
+                        $("#CourseAssignment_TeacherId").html(teachersOptions).removeAttr("disabled");
+
+                        var courses = data['courses'];
+
+                        var coursesOptions = "<option>Choose Course</option>" + getSelectOptions(courses, "Id", "Code");
+                        $("#CourseAssignment_CourseId").html(coursesOptions).removeAttr("disabled");
+
+                    });
+
+                }
+                else {
+                    $("#CourseAssignment_TeacherId").empty().html("<option>Select Department</option>").attr("disabled", "disabled");
+                    $("#CourseAssignment_CourseId").empty().html("<option>Select Department</option>").attr("disabled", "disabled");
+                }
+            });
+
+            var getSelectOptions= function (list, value, text) {
+
+                var html = "";
+
+                for (var i = 0; i < list.length; i++){
+                    html += "<option value='" + list[i][value] + "'>" + list[i][text] + "</option>";
+                }
+
+                return html;
+            }
+
+
+            var setCuorseInfo = function (info) {
+                if (info !== undefined) {
+                    $("#courseName").val(info.Name);
+                    $("#courseCredit").val(info.Credit);
+                    courseCredit = info.Credit;
+                }
+                else  {
+                    $("#courseName").val("Could not load");
+                    $("#courseCredit").val("Could not load");
+                }
+            }
+
+            var setTeahcerInfo = function (info) {
+                if (info !== undefined) {
+                    $("#teacherCreditToTake").val(info.CreditToTake);
+                    $("#teacherRemainingCredit").val(info.RemainingCredit);
+                    remainingCredit = info.RemainingCredit;
+                }
+                else {
+                    $("#teacherCreditToTake").val("Could not load");
+                    $("#teacherRemainingCredit").val("Could not load");
+                }
+            }
+
+            $("#CourseAssignment_TeacherId").change(function () {
+                if (this.value > 0 && this.value !== "") {
+                    var data = {};
+                    data.teacherId = this.value;
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetTeacherCreditReport", "Teacher")',
+                        data: data
+                    }).done(function (response) {
+                        setTeahcerInfo(response);
+                        }).fail(function () {
+                            setTeahcerInfo();
+                        });
+                }
+            });
+
+
+            $("#CourseAssignment_CourseId").change(function () {
+                if (this.value > 0 && this.value !== "") {
+                    var data = {};
+                    data.courseId = this.value;
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetCourseById", "Course")',
+                        data: data
+                    })
+                    .done(function (response) {
+
+                        setCuorseInfo(response);
+
+                        $("#teacherRemainingCredit").val(remainingCredit - courseCredit);
+
+                    })
+                    .fail(function (xhr) {
+
+                        setCuorseInfo(xhr);
+
+                    });
+                }
+            });
+        });
+    </script>
+
+}

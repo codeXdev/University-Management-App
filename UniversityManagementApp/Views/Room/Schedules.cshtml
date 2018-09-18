@@ -1,0 +1,58 @@
+﻿@model IEnumerable<UniversityManagementApp.ViewModels.ScheduleInfoViewModel>
+
+@{
+    ViewBag.Title = "Schedules";
+}
+
+<h2>Schedules</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CourseCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CourseName)
+        </th>
+        <th>Schedules</th>
+    </tr>
+
+@if (Model != null)
+{
+    foreach (var item in Model) {
+         <tr>
+             <td>
+                 @Html.DisplayFor(modelItem => item.CourseCode)
+             </td>
+             <td>
+                 @Html.DisplayFor(modelItem => item.CourseName)
+             </td>
+             <td>
+                 @if (item.RoomInfo != null)
+                 {
+                     foreach (var list in item.RoomInfo)
+                     {
+                         <Text>@list</Text>
+                         <br />
+                     }
+                 }
+                 else
+                 {
+                     <Text>Not Assigned Yet</Text>
+                     <br />
+                 }
+             </td>
+         </tr>
+     }
+}
+else
+{
+    <tr>
+        <td colspan="3">Empty</td>
+    </tr>
+}
+
+</table>

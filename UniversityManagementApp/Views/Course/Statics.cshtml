@@ -1,0 +1,87 @@
+﻿@using UniversityManagementApp.Models
+
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_AppLayout.cshtml";
+}
+
+@section styles
+{
+    <style>
+    </style>
+}
+
+
+<h4>Course Statics Page</h4>
+
+
+@*@using (Html.BeginForm(null, null, FormMethod.Get))
+    {*@
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.Label("department", "Department", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("department", new SelectList(ViewBag.Departments, "Id", "Name"), "Select Department", new { @class = "form-control" })
+        </div>
+    </div>
+</div>
+@* } *@
+
+<div class="table-holder">
+    <table class="table table-bordered table-hover">
+        <thead>
+        <th class="text-center">Code</th>
+        <th class="text-center">Name/Title</th>
+        <th class="text-center">Semster</th>
+        <th class="text-center">Assigned To</th>
+        </thead>
+
+        <tbody id="tbody"></tbody>
+
+    </table>
+</div>
+
+
+@section Scripts{
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script type="text/javascript">
+
+        $('#department').change(function() {
+
+            var department = $('#department').val(),
+                data = {};
+
+            if (department > 0 || department !== null) {
+                data.departmentId = department;
+                $.ajax({
+                    url: '@Url.Action("GetStatics", "Course")',
+                    data: data,
+                    success: function(statics) {
+                        var html = '';
+
+                        $.each(statics,
+                            function(i, value) {
+                                html += "<tr>";
+                                html += "<td>" + value.Code + "</td>";
+                                html += "<td>" + value.Name + "</td>";
+                                html += "<td>" + value.Semester + "</td>";
+                                html += "<td>" + value.AssignedTo + "</td>";
+                                html += "</tr>";
+                            });
+
+                        $('tbody').html(html);
+                    },
+                    error: function (xhr) {
+
+                        $('tbody').empty();
+                        bootbox.alert("An Error Occured. Details :" + xhr);
+                    }
+                });
+
+            }
+
+        });
+
+    </script>
+}

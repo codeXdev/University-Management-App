@@ -1,0 +1,153 @@
+﻿@model UniversityManagementApp.ViewModels.ClassroomAllocationViewModel
+
+@{
+    ViewBag.Title = "Allocate";
+}
+
+<h2>Allocate</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>ClassroomAllocation</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("Department", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Department", new SelectList(Model.Departments, "Id", "Name"), "Select Department", htmlAttributes: new { @class = "form-control js-department" })
+            </div>
+        </div>
+
+        @{
+            SelectListItem course = new SelectListItem
+            {
+                Text = "Select Department First",
+                Value = ""
+            };
+
+            IEnumerable<SelectListItem> courses = new List<SelectListItem> { course };
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassroomAllocation.CourseId, courses, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.CourseId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.RoomId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @if (Model.Rooms != null)
+                {
+                    @Html.DropDownListFor(model => model.ClassroomAllocation.RoomId, new SelectList(Model.Rooms, "Id", "Number"), "Select Room", htmlAttributes: new { @class = "form-control" })
+                }
+                else
+                {
+
+                    List<SelectListItem> list = new List<SelectListItem>
+                    {
+                         new SelectListItem
+                         {
+                              Text = "Insert Some Rooms First"
+                         }
+                    };
+
+                    @Html.DropDownListFor(model => model.ClassroomAllocation.RoomId, list, new { @class = "form-control" })
+                }
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.RoomId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.DayId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ClassroomAllocation.DayId, new SelectList(Model.Days, "Id", "Name"), "Select Day", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.DayId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ClassroomAllocation.Date, "{0: d MMM yyyy}", new { @class = "form-control js-datepicker" })
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.FromTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ClassroomAllocation.FromTime, new { @class = "form-control timepicker" })
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.FromTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ClassroomAllocation.ToTimeHours, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ClassroomAllocation.ToTimeHours, new { @class = "form-control timepicker" })
+                @Html.ValidationMessageFor(model => model.ClassroomAllocation.ToTimeHours, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+    <h3 class="text-info">@ViewBag.Message</h3>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section styles{
+    <link href="~/Content/BootStrap-Datepicker/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/Content/wickedpicker.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/wickedpicker.js"></script>
+    <script>
+        $('.js-datepicker').datepicker({ autoclose: true, format: "dd M yyyy" });
+        $('.timepicker').wickedpicker();
+
+
+        $('.js-department').change(function () {
+            var departmentValue = $(this).val(),
+                data = {};
+            data.departmentId = departmentValue;
+
+            if (departmentValue > 0 || departmentValue != "") {
+                $.ajax({
+                type: "GET",
+                data: data,
+                url: '@Url.Action("GetCoursesByDepartment", "Room")',
+                    success: function (courses) {
+                        var html = "<option>Select Course</option>";
+                        $.each(courses, function (index, value) {
+                            html += "<option value='" + value.Id + "'>" + value.Name + "</option>";
+                        })
+                        $('#ClassroomAllocation_CourseId').html(html);
+                    },
+                    error: function (xhr) {
+                        bootbox.alert("There is a problem. \nDetails :: " + xhr, function () {
+
+                        });
+                    }
+            });
+            }
+
+        });
+    </script>
+}

@@ -1,0 +1,85 @@
+﻿@model UniversityManagementApp.ViewModels.CourseViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+<div class="form-container">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Insert your Course Info</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Course.Code, htmlAttributes: new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.Code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Course.Name, htmlAttributes: new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.Credit, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Course.Credit, htmlAttributes: new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.Credit, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Course.Description,  htmlAttributes : new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.DepartmentId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Course.DepartmentId, new SelectList(Model.Departments, "Id", "Name"),"Select Department", htmlAttributes : new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.DepartmentId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.SemesterId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Course.SemesterId,new SelectList(Model.Semesters, "Id", "Name"), "Select Semester", htmlAttributes: new { @class = "form-control" } )
+                    @Html.ValidationMessageFor(model => model.Course.SemesterId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@ViewBag.message
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

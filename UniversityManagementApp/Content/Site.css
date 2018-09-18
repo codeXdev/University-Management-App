@@ -1,0 +1,60 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.form-container {
+    /*margin-top: 20px;*/
+    max-width: 1000px;
+    /*border: 2px solid green;*/
+    margin: auto;
+    padding: 60px;
+}
+
+#form-group-center {
+    margin: auto;
+    width: 550px;
+}
+
+.hours-holder {
+    float: left;
+    display: inherit;
+    max-width: 20px;
+}
+
+#time-input {
+    display: inline;
+}
+
+#ToTimeHours, #FromTimeHours {
+    display: inline-block;
+    font-weight: bold;
+    width: 110px;
+    font-family: cursive;
+}
+
+
+.align-center {
+    width: 40%;
+    margin: auto;
+}

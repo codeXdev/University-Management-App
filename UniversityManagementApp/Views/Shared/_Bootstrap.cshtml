@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - University Management App</title>
+
+    <link href="~/Content/Bootswatch/bootstrap-united.css" rel="stylesheet" />
+
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("University Management App", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Department</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Save Department", "Save", "Department")</li>
+                            <li>@Html.ActionLink("View Department", "DepartmentsList", "Department")</li>
+                            <li>@Html.ActionLink("View Courses By Dept", "ViewCourses", "Department")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Course</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Save Course", "Create", "Course")</li>
+                            @*<li>@Html.ActionLink("Save Course", "", "Course")</li>
+                                <li>@Html.ActionLink("Assign Course to teacher", "Assign", "CourseAssign")</li>*@
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Student</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Register Student", "Register", "Student")</li>
+                            <li>@Html.ActionLink("Enroll Student", "EnrollInCourse", "Student")</li>
+                            <li>@Html.ActionLink("Save Result", "SaveResult", "Student")</li>
+                            <li>@Html.ActionLink("View Result", "ViewResult", "Student")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Room</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Allocate Rooms", "Allocate", "Room")</li>
+                            <li>@Html.ActionLink("View Room Schedules", "ViewClassRoomSchedule", "Room")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Teacher</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Save Teacher", "Save", "Teacher")</li>
+                        </ul>
+                    </li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - University Management App</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

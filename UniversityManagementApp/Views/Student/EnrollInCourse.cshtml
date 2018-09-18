@@ -1,0 +1,130 @@
+﻿@using System.Collections
+@model UniversityManagementApp.ViewModels.CourseEnrollmentViewModel
+
+@{
+                /**/
+
+                ViewBag.Title = "EnrollInCourse";
+}
+
+<h2>EnrollInCourse</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>CourseEnrollment</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CourseEnrollment.StudentId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CourseEnrollment.StudentId, new SelectList(Model.Students, "Id", "RegistrationNo"), "Select Student", new { @class = "form-control js-student" })
+                @Html.ValidationMessageFor(model => model.CourseEnrollment.StudentId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Name", null, new { @class = "form-control js-name", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Email", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Email", null, new { @class = "form-control js-email", @readonly = "readonly" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Department", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("Department", null, new { @class = "form-control js-department", @readonly = "readonly" })
+            </div>
+        </div>
+
+        @{
+            SelectListItem item = new SelectListItem
+            {
+                Text = "Select Student"
+            };
+
+            IEnumerable<SelectListItem> list = new List<SelectListItem> { item };
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CourseEnrollment.CourseId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CourseEnrollment.CourseId, list, "Select Course", new { @class = "form-control js-courses" })
+                @Html.ValidationMessageFor(model => model.CourseEnrollment.CourseId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CourseEnrollment.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CourseEnrollment.Date, new { htmlAttributes = new { @class = "form-control js-date" } })
+                @Html.ValidationMessageFor(model => model.CourseEnrollment.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+    <h2 class="info">@ViewBag.Message</h2>
+
+<div>
+    @*@Html.ActionLink("Back to List", "Index")*@
+</div>
+
+@section styles
+{
+    <link href="~/Content/BootStrap-Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+
+    <script>
+
+        $('.js-date').datepicker({autoclose: true, format: 'dd M yyyy', clearBtn: true});
+
+        $('.js-student').change(function () {
+            var stdId = $(this).val(), data = {};
+            data.studentId = stdId;
+
+            if (stdId > 0) {
+                $.ajax({
+                    url: '@Url.Action("GetStudentInfo", "Student")',
+                    data: data,
+                    success: function (info) {
+                        //console.log(info);
+                        $('.js-name').val(info.Name);
+                        $('.js-email').val(info.Email);
+                        $('.js-department').val(info.DepartmentName);
+
+                        var coursesDdL = $('.js-courses'), html = "";
+                        coursesDdL.empty();
+
+                        $.each(info.Courses, function(i, course) {
+                            html += "<option value='" + course.Id + "'>" + course.Name + "</option>";
+                        });
+
+                        coursesDdL.html(html);
+                    }
+                });
+            }
+        });
+    </script>
+}

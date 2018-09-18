@@ -1,0 +1,58 @@
+﻿@using UniversityManagementApp.Models
+
+@{
+    ViewBag.Title = "ViewResult";
+}
+
+
+@using (Html.BeginForm())
+{
+    <div class="align-center">
+        <div class="form-horizontal">
+            <h4>StudentResult</h4>
+            <div class="form-group">
+                @Html.Label("Student", htmlAttributes: new { @class = "control-label col-md-2" }, labelText: "Student")
+                <div class="col-md-10">
+
+                    @{
+                        List<SelectListItem> list = new List<SelectListItem>();
+
+
+                        foreach (Student student in ViewBag.Students)
+                        {
+                            SelectListItem aItem = new SelectListItem
+                            {
+                                Value = student.Id.ToString(),
+                                Text = student.RegistrationNo
+                            };
+
+                            list.Add(aItem);
+                        }
+                    }
+                    @Html.DropDownList("Student", list, "Select Student", new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" }, labelText: "Name")
+                <div class="col-md-10">
+                    @Html.TextBox("Name", null, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" }, labelText: "Name")
+                <div class="col-md-10">
+                    @Html.TextBox("Name", null, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-2" }, labelText: "Name")
+                <div class="col-md-10">
+                    @Html.TextBox("Name", null, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
